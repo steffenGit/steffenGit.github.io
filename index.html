@@ -50,7 +50,7 @@
                         <ul class="nav navbar-nav">
                             <li><a href="#about">About Me</a></li>
                             <li><a href="#experience">Experience</a></li>
-                            <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#latestProjects">Projects<span class="caret"></span></a>
+                            <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Projects<span class="caret"></span></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="#latestProjects">Latest Projects</a></li>
                                     <li><a href="#otherProjects">Other Projects</a></li>
@@ -79,9 +79,9 @@
         </div><!--//container-->
     </header><!--//header-->
     
-    <div class="container sections-wrapper">
+    <div class="scrollspy container sections-wrapper" data-spy="scroll" data-target=".navbar" data-offset="50">
         <div class="row">
-            <div data-spy="scroll" data-target=".navbar" data-offset="50" class="scrollspy primary col-md-8 col-sm-12 col-xs-12">
+            <div class="primary col-md-8 col-sm-12 col-xs-12">
                 <section id="about" class="about section">
                     <div class="section-inner">
                         <h2 class="heading">About Me</h2>
