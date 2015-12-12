@@ -17,12 +17,15 @@ p.small {
 }
 
 a,
-a:hover,
 a:focus,
 a:active,
 a.active {
     outline: 0;
     color: #18bc9c;
+}
+a:hover {
+  outline: 0;
+  color: #ce4835 !important;
 }
 
 h1,
@@ -32,7 +35,8 @@ h4,
 h5,
 h6 {
     text-transform: uppercase;
-    font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    /*font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;*/
+    font-family: 'Didact Gothic', sans-serif;
     font-weight: 700;
 }
 
@@ -104,15 +108,20 @@ header img {
 header .intro-text .name {
     padding-top: 200px;
     display: block;
-    text-transform: uppercase;
-    font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    /*text-transform: uppercase;*/
+    font-variant: small-caps;
+    /*font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;*/
+    font-family: 'Didact Gothic', sans-serif;
     font-size: 2em;
-    font-weight: 700;
+    font-weight: 400;
+    /*font-weight: 700;*/
+    /*color: #ce4835;*/
 }
 
 header .intro-text .skills {
     font-size: 1.25em;
     font-weight: 300;
+    /*color: #073378;*/
 }
 
 @media(min-width:768px) {
@@ -143,6 +152,7 @@ header .intro-text .skills {
         -webkit-transition: all .3s;
         -moz-transition: all .3s;
         transition: all .3s;
+        color: #ce4835;
     }
 
     .navbar-fixed-top.navbar-shrink {
@@ -156,7 +166,9 @@ header .intro-text .skills {
 
 .navbar {
     text-transform: uppercase;
-    font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    /*font-variant: small-caps;*/
+    /*font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;*/
+    font-family: 'Didact Gothic', sans-serif;
     font-weight: 700;
 }
 
@@ -175,6 +187,8 @@ header .intro-text .skills {
 .navbar-default,
 .navbar-inverse {
     border: 0;
+    background-color: #1e5fc4;
+    /* defaults to dark blue (bootstrap def) */
 }
 
 section {
@@ -188,7 +202,8 @@ section h2 {
 
 section.success {
     color: #fff;
-    background: #18bc9c;
+    /*background: #18bc9c;*/
+    background-color: #6f9108;
 }
 
 section.success a,
@@ -284,6 +299,10 @@ section.success a.active {
     border: solid 2px #fff;
     color: #18bc9c;
     background: #fff;
+}
+.btn-success {
+  background-color: #6f9108;
+  border-color: #6f9108;
 }
 
 .floating-label-form-group {
