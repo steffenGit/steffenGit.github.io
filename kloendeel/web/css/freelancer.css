@@ -115,13 +115,13 @@ header .intro-text .name {
     font-size: 2em;
     font-weight: 400;
     /*font-weight: 700;*/
-    /*color: #ce4835;*/
+    color: #ce4835 !important;
 }
 
 header .intro-text .skills {
     font-size: 1.25em;
     font-weight: 300;
-    /*color: #073378;*/
+    color: #073378 !important;
 }
 
 @media(min-width:768px) {
