@@ -15,12 +15,17 @@
         <p>Performance comparison of different mandelbrot implementations.</p>
         <p>All of them use <a href="https://github.com/rembound/Mandelbrot-Fractal-HTML5">this code</a> as the development basis.</p>
         <section>
-            <h3><a href="mandelbrot2/index.html">classic mandelbrot</a></h3>
-            <p>Tis is a copy of the code mentioned above with slight additions for timing logs.</p>
+            <h3><a href="mandelbrot-classic/index.html">classic mandelbrot</a></h3>
+            <p>This is a copy of the code mentioned above with slight additions for timing logs.</p>
         </section>
         <section>
-            <h3><a href="mandelbrot/index.html">mandelbrot w/ webworkers</a></h3>
+            <h3><a href="mandelbrot-ww/index.html">mandelbrot w/ webworkers</a></h3>
             <p>This is based on the code mentioned above, but splits the work upon a specified number of webworkers.</p>
+            <p>It uses sharedArrayBuffers, as outlined <a href="http://www.2ality.com/2017/01/shared-array-buffer.html?m=1"> here</a>. The calculated data gets transorfmed into an image afterwards.</p>
+            <p>There is plenty of room for further optimizations.</p>
+            <h4>controlls</h4>
+            <p>mousewheel to zoom in/out to/from center of the image</p>
+            <p>mouseclick to pan image to mouseposition</p>
         </section>
     </article>
 </main>

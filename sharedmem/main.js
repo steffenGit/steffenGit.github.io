@@ -9,8 +9,7 @@
     return;
   }
 
-
-  // mandelbrot-fractal.js
+  // mandelbrot-ww-fractal.js
 
   const worker = new Worker('worker.js');
 

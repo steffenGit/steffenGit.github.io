@@ -51,10 +51,10 @@
 
   function singleIteration(x0, y0, maxiterations) {
     // Iteration letiables
-    let a = 0;
-    let b = 0;
-    let rx = 0;
-    let ry = 0;
+    let a = 0.0;
+    let b = 0.0;
+    let rx = 0.0;
+    let ry = 0.0;
 
     // Iterate
     let iterations = 0;

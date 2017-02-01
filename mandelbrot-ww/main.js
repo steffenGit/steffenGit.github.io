@@ -14,16 +14,18 @@ window.onload = function () {
   // Get the canvas and context
   const canvas = document.getElementById("viewport");
   const context = canvas.getContext("2d");
-
+  let moveTimeout = setTimeout(function () {}, 0);
+  let moving = false;
   // Width and height of the image
   const imagew = canvas.width;
   const imageh = canvas.height;
 
-  const maxWorkers = 8;
+  const maxWorkers = 4;
   const workers = [maxWorkers];
 
+
   if (imagew % maxWorkers !== 0) {
-    throw new Error('image width must be a multiple of '+ maxWorkers);
+    throw new Error('image width must be a multiple of ' + maxWorkers);
   }
 
   // Image Data (RGBA)
@@ -40,19 +42,19 @@ window.onload = function () {
   // Pan and zoom parameters
   let offsetx = -imagew / 2;
   let offsety = -imageh / 2;
-  // let panx = -100;
-  // let pany = 0;
-  // let zoom = 150;
+  let panx = -100;
+  let pany = 0;
+  let zoom = 150;
 
-  let panx = -271718;
-  let pany = -484;
-  let zoom = 153600;
+  // let panx = -271718;
+  // let pany = -484;
+  // let zoom = 153600;
 
   // Palette array of 256 colors
   let palette = [];
 
   // The maximum number of iterations per pixel
-  let maxiterations = 250;
+  let maxiterations = 1000;
 
   let done = 0;
 
@@ -60,6 +62,7 @@ window.onload = function () {
   function init() {
     // Add mouse events
     canvas.addEventListener("mousedown", onMouseDown);
+    canvas.addEventListener("wheel", onMouseWheel);
 
     createWorkers();
 
@@ -112,7 +115,8 @@ window.onload = function () {
 
   function generateImage() {
 
-    console.time('all');
+    console.time('all_' + maxWorkers);
+
     let opts = {
       imageh        : imageh,
       imagew        : imagew,
@@ -127,6 +131,7 @@ window.onload = function () {
     };
 
     for (let i = 0; i < maxWorkers; i++) {
+      console.time('worker_' + i);
       workers[i].postMessage({
         buffer : {sharedBuffer},
         id     : i,
@@ -162,16 +167,19 @@ window.onload = function () {
 
 
   function paintOnMessage(event) {
-    console.log(done);
+    console.timeEnd('worker_' + event.data);
     done++;
     if (done === maxWorkers) {
+      console.time('paint_only');
       done = 0;
       for (let y = 0; y < imageh; y++) {
         for (let x = 0; x < imagew; x++) {
           setColor(x, y);
         }
       }
-      console.timeEnd('all');
+      console.timeEnd('paint_only');
+      console.timeEnd('all_' + maxWorkers);
+      moving = false;
     }
   }
 
@@ -179,43 +187,55 @@ window.onload = function () {
   ////////////////////////////////////////////////////////////////////////////////////////
 
   // Zoom the fractal
-  function zoomFractal(x, y, factor, zoomin) {
+  function zoomFractal(factor, zoomin) {
     if (zoomin) {
       // Zoom in
       zoom *= factor;
-      panx = factor * (x + offsetx + panx);
-      pany = factor * (y + offsety + pany);
+      panx = factor * (imagew/2 + offsetx + panx);
+      pany = factor * (imageh/2 + offsety + pany);
     } else {
       // Zoom out
       zoom /= factor;
-      panx = (x + offsetx + panx) / factor;
-      pany = (y + offsety + pany) / factor;
+      panx = (imagew/2 + offsetx + panx) / factor;
+      pany = (imageh/2 + offsety + pany) / factor;
     }
 
     console.log('zoom', zoom, 'panx', panx, 'pany', pany);
   }
 
+  function panFractal(x, y) {
+    panx = (x + offsetx + panx);
+    pany = (y + offsety + pany);
+  }
+
   // Mouse event handlers
   function onMouseDown(e) {
+    if (moving) return;
+    moving = true;
     let pos = getMousePos(canvas, e);
 
-    // Zoom out with Control
-    let zoomin = true;
-    if (e.ctrlKey) {
-      zoomin = false;
-    }
+    panFractal(pos.x, pos.y);
+    // Generate a new image
+    clearTimeout(moveTimeout);
+    moveTimeout = setTimeout(generateImage, 100);
+  }
 
-    // Pan with Shift
-    let zoomfactor = 2;
-    if (e.shiftKey) {
-      zoomfactor = 1;
-    }
+  function onMouseWheel(e) {
+    e.preventDefault();
+    if (moving) return;
+    moving = true;
+
+
+    let zoomin = e.wheelDelta >= 0;
+    let zoomfactor = 1.3;
 
     // Zoom the fractal at the mouse position
-    zoomFractal(pos.x, pos.y, zoomfactor, zoomin);
+    zoomFractal(zoomfactor, zoomin);
 
     // Generate a new image
-    generateImage();
+    clearTimeout(moveTimeout);
+    moveTimeout = setTimeout(generateImage, 100);
+
   }
 
   // Get the mouse position
