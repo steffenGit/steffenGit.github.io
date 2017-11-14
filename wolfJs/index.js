@@ -32,7 +32,7 @@ m.load([
   1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 3,
   1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 2, 2, 1, 1, 3, 1, 1]);
 
-let c = new Camera(15.2, 9.4, 0.0, Math.PI / 3);
+let c = new Camera(12.2, 7.4, 0.0, Math.PI / 3, m);
 let s = new Scene(m, c);
 
 let mr = new MapRenderer(s, mapCtx);
