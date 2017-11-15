@@ -4,6 +4,7 @@ import {Scene} from'./lib/Scene.js';
 import {Camera} from './lib/Camera.js';
 import {MapRenderer} from './lib/MapRenderer.js'
 import {FpRenderer} from './lib/FpRenderer.js'
+import {SvgRenderer} from './lib/SvgRenderer.js'
 
 console.log('script loaded');
 
@@ -36,13 +37,13 @@ let c = new Camera(12.2, 7.4, 0.0, Math.PI / 3, m);
 let s = new Scene(m, c);
 
 let mr = new MapRenderer(s, mapCtx);
-let fpr = new FpRenderer(s, fpCtx, 640, 480);
+let fpr = new SvgRenderer(s, fpCtx, 640, 480);
 
 let l = setInterval(function () {
   s.update();
   mr.render();
   fpr.render();
-}, 28)
+}, 16)
 
 
 

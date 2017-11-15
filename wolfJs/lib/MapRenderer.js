@@ -3,11 +3,12 @@ import { Ground } from '../lib/Ground.js';
 
 export class MapRenderer {
 
-  constructor(scene, ctx) {
+  constructor(scene, ctx, scale) {
     this.scene = scene;
     this.m = scene.map;
     this.c = scene.camera;
     this.ctx = ctx;
+    this.scale = scale || 32;
   }
 
   render(dT) {
@@ -20,61 +21,41 @@ export class MapRenderer {
 
   renderMap() {
     for (let t of this.m.tiles) {
-      let ox = t.x * this.m.tileWidth;
-      let oy = t.y * this.m.tileHeight;
-      this.ctx.fillStyle = t.color;
-      this.ctx.fillRect(ox, oy, this.m.tileWidth, this.m.tileHeight);
+      let ox = t.x * this.scale;
+      let oy = t.y * this.scale;
+      this.ctx.fillStyle = t.rgbString();
+      this.ctx.fillRect(ox, oy, this.scale, this.scale);
     }
   }
 
   renderGrid() {
     this.ctx.strokeStyle = 'black';
     for (let t of this.m.tiles) {
-      let ox = t.x * this.m.tileWidth;
-      let oy = t.y * this.m.tileHeight;
+      let ox = t.x * this.scale;
+      let oy = t.y * this.scale;
       this.ctx.beginPath();
-      this.ctx.rect(ox, oy, this.m.tileWidth, this.m.tileHeight);
+      this.ctx.rect(ox, oy, this.scale, this.scale);
       this.ctx.stroke();
     }
   }
 
   renderCamera() {
-    let scale = this.m.tileWidth;
     let length = 10;
 
     let dirX = this.c.x + length * Math.cos(this.c.dir);
     let dirY = this.c.y + length * Math.sin(this.c.dir);
 
-    let fovLeftAngle = this.c.dir + this.c.fov / 2;
-    let fovRightAngle = this.c.dir - this.c.fov / 2;
-
-    let fovLeftX = this.c.x + length * Math.cos(fovLeftAngle);
-    let fovLeftY = this.c.y - length * Math.sin(fovLeftAngle);
-
-    let fovRightX = this.c.x + length * Math.cos(fovRightAngle);
-    let fovRightY = this.c.y - length * Math.sin(fovRightAngle);
 
     this.ctx.strokeStyle = 'black';
     this.ctx.beginPath();
-    this.ctx.arc(this.c.x * scale, this.c.y * scale, scale / 2, 0, 2 * Math.PI);
-    this.ctx.moveTo(this.c.x * scale, this.c.y * scale);
-    this.ctx.strokeStyle = 'black';
-    this.ctx.lineTo(dirX * scale, dirY * scale);
-
-    this.ctx.moveTo(this.c.x * scale, this.c.y * scale);
-    //this.ctx.lineTo(fovLeftX * scale, fovLeftY * scale);
-
-    this.ctx.strokeStyle = 'blue';
-    this.ctx.moveTo(this.c.x * scale, this.c.y * scale);
-    //this.ctx.lineTo(fovRightX * scale, fovRightY * scale);
+    this.ctx.arc(this.c.x * this.scale, this.c.y * this.scale, this.scale / 2, 0, 2 * Math.PI);
+    this.ctx.moveTo(this.c.x * this.scale, this.c.y * this.scale);
+    this.ctx.lineTo(dirX * this.scale, dirY * this.scale);
     this.ctx.stroke();
 
   }
 
   raycast() {
-
-    let scale = this.m.tileWidth;
-
 
     let x = this.c.x;
     let y = this.c.y;
@@ -89,7 +70,7 @@ export class MapRenderer {
     let intersection = this.getIntersection(x, y, dir);
     this.ctx.strokeStyle = 'silver';
     this.ctx.beginPath();
-    this.ctx.arc(intersection.x * scale, intersection.y * scale, 3, 0, 2 * Math.PI);
+    this.ctx.arc(intersection.x * this.scale, intersection.y * this.scale, 3, 0, 2 * Math.PI);
     this.ctx.stroke();
   }
 
@@ -108,7 +89,6 @@ export class MapRenderer {
 
 
   getIntersectVert(x, y, dir) {
-    let scale = this.m.tileWidth;
 
     let mapX = Math.floor(x);
     let dX = x - mapX;
@@ -144,7 +124,7 @@ export class MapRenderer {
 
       this.ctx.strokeStyle = 'lightblue';
       this.ctx.beginPath();
-      this.ctx.arc(vXVert * scale, vYVert * scale, 3, 0, 2 * Math.PI);
+      this.ctx.arc(vXVert * this.scale, vYVert * this.scale, 3, 0, 2 * Math.PI);
       this.ctx.stroke()
 
       if (this.isHit(vXVert, vYVert, 'vert')) {
@@ -165,7 +145,6 @@ export class MapRenderer {
   }
 
   getIntersectHor(x, y, dir) {
-    let scale = this.m.tileWidth;
 
     let mapX = Math.floor(x);
     let dX = x - mapX;
@@ -204,7 +183,7 @@ export class MapRenderer {
 
       this.ctx.strokeStyle = 'orange';
       this.ctx.beginPath();
-      this.ctx.arc(vXHor * scale, vYHor * scale, 3, 0, 2 * Math.PI);
+      this.ctx.arc(vXHor * this.scale, vYHor * this.scale, 3, 0, 2 * Math.PI);
       this.ctx.stroke()
 
       if (this.isHit(vXHor, vYHor, 'hor')) {

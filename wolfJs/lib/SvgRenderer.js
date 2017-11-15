@@ -1,5 +1,5 @@
-export class FpRenderer {
-
+export class SvgRenderer {
+    
   constructor(scene, ctx, width, height, scalingFactor) {
     this.scene = scene;
     this.m = scene.map;
@@ -7,49 +7,19 @@ export class FpRenderer {
     this.ctx = ctx;
     this.w = width;
     this.h = height;
-
-
-    this.bb = document.createElement('canvas');
-    
-
-    this.prefillBufferBg();
-
   }
-
-
-  prefillBufferBg() {
-    for (let i = 0; i < this.w*this.h*4; i+=4) {
-      if(i < this.w*this.h*2) {
-        this.bufferBg.data[i + 0] = 0xf0;
-        this.bufferBg.data[i + 1] = 0xf0;
-        this.bufferBg.data[i + 2] = 0xf0;
-        this.bufferBg.data[i + 3] = 0xff;
-      }else {
-        this.bufferBg.data[i + 0] = 0xc0;
-        this.bufferBg.data[i + 1] = 0xc0;
-        this.bufferBg.data[i + 2] = 0xc0;
-        this.bufferBg.data[i + 3] = 0xff;
-
-      }
-    }
-
-  }
-
 
   render(dT) {
     this.renderBackground();
     this.renderWalls();
 
-
-    // swap buffers
-    //[this.backBuffer, this.frontBuffer] = [this.frontBuffer, this.backBuffer];
-
-    // draw on canvas
-    this.ctx.drawImage(this.bb, 0, 0);
   }
 
   renderBackground() {
-    this.backBuffer.data.set(this.bufferBg.data);
+    this.ctx.fillStyle = 'lightGrey';
+    this.ctx.fillRect(0, 0, this.w, this.h / 2);
+    this.ctx.fillStyle = 'grey';
+    this.ctx.fillRect(0, this.h / 2, this.w, this.h);
   }
 
   renderWalls() {
@@ -67,9 +37,12 @@ export class FpRenderer {
       let intersection = this.getIntersection(x, y, dir);
       let length = this.getLineLength(intersection.d);
 
-
-      // draw line
-      this.drawVertLine(i, length, [255, 255, 255, 255]);
+      // this.ctx.strokeStyle = intersection.s + intersection.t.color;
+      this.ctx.strokeStyle = intersection.t.rgbString(intersection.d);
+      this.ctx.beginPath();
+      this.ctx.moveTo(i+0.5, this.h / 2 - length / 2);
+      this.ctx.lineTo(i+0.5, this.h / 2 + length / 2);
+      this.ctx.stroke();
     }
 
   }
@@ -127,7 +100,6 @@ export class FpRenderer {
         intersectVert = {
           x: vXVert,
           y: vYVert,
-          s: 'dark',
           t: i,
           d: this.getDistance(x, y, vXVert, vYVert)
         };
@@ -185,7 +157,6 @@ export class FpRenderer {
         intersectHor = {
           x: vXHor,
           y: vYHor,
-          s: '',
           t: i,
           d: this.getDistance(x, y, vXHor, vYHor)
         };
@@ -244,20 +215,6 @@ export class FpRenderer {
 
     return l;
 
-  }
-
-  drawVertLine(x, h, c) {
-    let offset = this.h/2 - h/2
-    offset = Math.floor(offset);
-    for(let i = 0; i < h; i++) {
-      this.drawPixel(x, offset + i, c);
-    }
-  }
-
-  drawPixel (x, y, c) {
-    let i = y*this.w*4 + x*4;
-    this.backBuffer.data.set(c, i);
-    
   }
 
 

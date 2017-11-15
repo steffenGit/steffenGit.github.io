@@ -6,8 +6,6 @@ export class Map {
   constructor(width, height, tileWidth, tileHeight) {
     this.width = width;
     this.height = height;
-    this.tileWidth = tileWidth;
-    this.tileHeight = tileHeight;
 
     this.tiles = new Array(this.width * this.height);
   }
