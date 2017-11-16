@@ -6,6 +6,7 @@ import {MapRenderer} from './lib/MapRenderer.js'
 import {FpRenderer} from './lib/FpRenderer.js'
 import {SvgRenderer} from './lib/SvgRenderer.js'
 import {FaceRenderer} from './lib/FaceRenderer.js'
+import {TextureRenderer} from './lib/TextureRenderer.js'
 
 console.log('script loaded');
 
@@ -39,7 +40,7 @@ let s = new Scene(m, c);
 
 let mapr = new MapRenderer(s, mapCtx);
 let svgr = new SvgRenderer(s, svgCtx, 640, 480);
-let fr = new FaceRenderer(s, faceCtx, 640, 480);
+let fr = new TextureRenderer(s, faceCtx, 640, 480);
 let gCount = 0;
 let rCount = 0;
 
@@ -53,9 +54,9 @@ let gameLoop = setInterval(function () {
 
 let renderLoop = setInterval(function () {
   fr.render();
-  svgr.render();
+  //svgr.render();
   rCount++;
-}, 0)
+}, 17)
 
 
 setInterval(function() {
@@ -63,6 +64,59 @@ setInterval(function() {
   rCount = 0;
   gCount = 0;
 }, 1000)
+
+
+document.addEventListener('keydown', (event) => {
+  const keyName = event.key;
+
+
+  switch(keyName) {
+    case 'w':
+    case 'ArrowUp':
+      c.speed = c.maxSpeed;
+      break;
+    case 'a':
+    case 'ArrowLeft':
+      c.rot = -c.maxRot;
+      break;
+    case 's':
+    case 'ArrowDown':
+      c.speed = -c.maxSpeed;
+      break;
+    case 'd':
+    case 'ArrowRight':
+      c.rot = c.maxRot;
+      break;  
+  }
+  event.preventDefault();
+
+
+}, false);
+
+document.addEventListener('keyup', (event) => {
+  const keyName = event.key;
+
+  switch(keyName) {
+    case 'w':
+    case 'ArrowUp':
+      c.speed = 0;
+      break;
+    case 'a':
+    case 'ArrowLeft':
+      c.rot = 0;
+      break;
+    case 's':
+    case 'ArrowDown':
+      c.speed = 0;
+      break;
+    case 'd':
+    case 'ArrowRight':
+      c.rot = 0;
+      break;  
+  }
+  event.preventDefault();
+
+}, false);
 
 
 
