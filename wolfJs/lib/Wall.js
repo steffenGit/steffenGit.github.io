@@ -32,7 +32,7 @@ export class Wall {
       default:
         this.color = 'pink';
         this.rgb = [255, 192, 203];
-        this.texture.src = '/textures/blocks/concrete_red.png';
+        this.texture.src = 'textures/blocks/concrete_red.png';
     }
   }
 
@@ -41,11 +41,11 @@ export class Wall {
     this.y = y;
   }
   rgbString(d) {
-    if(!d)
+    if (!d)
       return 'rgb(' + this.rgb[0] + ', ' + this.rgb[1] + ', ' + this.rgb[2] + ')';
 
-    let f = 2/(d*d);
-    return 'rgb(' + Math.floor(f*this.rgb[0]) + ', ' + Math.floor(f*this.rgb[1]) + ', ' + Math.floor(f*this.rgb[2]) + ')';
+    let f = 2 / (d * d);
+    return 'rgb(' + Math.floor(f * this.rgb[0]) + ', ' + Math.floor(f * this.rgb[1]) + ', ' + Math.floor(f * this.rgb[2]) + ')';
   }
- 
+
 }

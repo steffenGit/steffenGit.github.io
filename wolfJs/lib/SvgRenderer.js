@@ -101,7 +101,7 @@ export class SvgRenderer {
           x: vXVert,
           y: vYVert,
           t: i,
-          d: this.getDistance(x, y, vXVert, vYVert)
+          d: this.getDistance(x, y, vXVert, vYVert, dir, this.c.dir)
         };
         hitVert = true;
 
@@ -158,7 +158,7 @@ export class SvgRenderer {
           x: vXHor,
           y: vYHor,
           t: i,
-          d: this.getDistance(x, y, vXHor, vYHor)
+          d: this.getDistance(x, y, vXHor, vYHor, dir, this.c.dir)
         };
         hitHor = true;
       }
@@ -169,8 +169,10 @@ export class SvgRenderer {
     return intersectHor;
   }
 
-  getDistance(x1, y1, x2, y2) {
-    return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+  getDistance(x1, y1, x2, y2, dir, camDir) {
+    //return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+    let d = (x2-x1)*Math.cos(-camDir) - (y2-y1)*Math.sin(-camDir);
+    return Math.abs(d);
   }
 
 
