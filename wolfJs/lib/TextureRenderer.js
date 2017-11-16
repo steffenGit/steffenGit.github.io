@@ -41,7 +41,7 @@ export class TextureRenderer {
       let v = Math.max(intersect.x-Math.floor(intersect.x), intersect.y-Math.floor(intersect.y));
       
       //console.log(intersect.t.texture, i, Math.floor(this.h / 2 - length / 2), 2, Math.floor(length), Math.floor(64*v), 0, 2, 64);
-      this.ctx.drawImage(intersect.t.texture, Math.floor(64*v), 0, 2, 64, i, Math.floor(this.h / 2 - length / 2), 2, Math.floor(length),);
+      this.ctx.drawImage(intersect.t.texture, Math.floor(64*v), 0, 1, 64, i, Math.floor(this.h / 2 - length / 2), 1, Math.floor(length),);
       
       // this.ctx.strokeStyle = intersect.t.rgbString(intersect.d);
       // this.ctx.beginPath();
