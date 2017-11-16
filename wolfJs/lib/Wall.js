@@ -7,27 +7,27 @@ export class Wall {
       case 1:
         this.color = 'red';
         this.rgb = [218, 113, 113];
-        this.texture.src = '/textures/blocks/red_sandstone_normal.png';
+        this.texture.src = 'textures/blocks/red_sandstone_normal.png';
         break;
       case 2:
         this.color = 'orchid';
         this.rgb = [218, 112, 214];
-        this.texture.src = '/textures/blocks/concrete_powder_magenta.png';
+        this.texture.src = 'textures/blocks/concrete_powder_magenta.png';
         break;
       case 3:
         this.color = 'orange';
         this.rgb = [255, 165, 0];
-        this.texture.src = '/textures/blocks/coarse_dirt8.png';
+        this.texture.src = 'textures/blocks/coarse_dirt8.png';
         break;
       case 4:
         this.color = 'green';
         this.rgb = [0, 128, 0];
-        this.texture.src = '/textures/blocks/cobblestone_mossy.png';
+        this.texture.src = 'textures/blocks/cobblestone_mossy.png';
         break;
       case 5:
         this.color = 'cyan';
         this.rgb = [0, 255, 255];
-        this.texture.src = '/textures/blocks/lapis_block.png';
+        this.texture.src = 'textures/blocks/lapis_block.png';
         break;
       default:
         this.color = 'pink';
