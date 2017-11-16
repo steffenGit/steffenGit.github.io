@@ -1,5 +1,6 @@
 export class Wall {
-  constructor(type) {
+  constructor(type, id) {
+    this.id = id;
     this.type = type;
     switch (type) {
       case 1:

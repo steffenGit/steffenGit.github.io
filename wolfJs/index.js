@@ -5,14 +5,15 @@ import {Camera} from './lib/Camera.js';
 import {MapRenderer} from './lib/MapRenderer.js'
 import {FpRenderer} from './lib/FpRenderer.js'
 import {SvgRenderer} from './lib/SvgRenderer.js'
+import {FaceRenderer} from './lib/FaceRenderer.js'
 
 console.log('script loaded');
 
-const mapC = document.getElementById("mapCanvas");
-const mapCtx = mapC.getContext("2d");
+const mapCtx = document.getElementById("mapCanvas").getContext("2d");
 
-const fpC = document.getElementById("fpCanvas");
-const fpCtx = fpC.getContext("2d");
+const faceCtx = document.getElementById("faceCanvas").getContext("2d");
+
+const svgCtx = document.getElementById("svgCanvas").getContext("2d");
 
 let m = new Map(20, 15, 32, 32);
 
@@ -36,14 +37,32 @@ m.load([
 let c = new Camera(12.2, 7.4, 0.0, Math.PI / 3, m);
 let s = new Scene(m, c);
 
-let mr = new MapRenderer(s, mapCtx);
-let fpr = new SvgRenderer(s, fpCtx, 640, 480);
+let mapr = new MapRenderer(s, mapCtx);
+let svgr = new SvgRenderer(s, svgCtx, 640, 480);
+let fr = new FaceRenderer(s, faceCtx, 640, 480);
+let gCount = 0;
+let rCount = 0;
 
-let l = setInterval(function () {
+
+let gameLoop = setInterval(function () {
   s.update();
-  mr.render();
-  fpr.render();
-}, 16)
+  mapr.render();  
+  gCount++;
+}, 17)
+
+
+let renderLoop = setInterval(function () {
+  fr.render();
+  svgr.render();
+  rCount++;
+}, 0)
+
+
+setInterval(function() {
+  console.log(gCount, rCount);
+  rCount = 0;
+  gCount = 0;
+}, 1000)
 
 
 

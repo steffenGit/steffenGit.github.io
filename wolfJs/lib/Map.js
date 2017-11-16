@@ -16,10 +16,10 @@ export class Map {
       let x = i % this.width;
       let y = Math.floor(i / this.width);
       if (t == 0) {
-        this.setTile(x, y, new Ground(t));
+        this.setTile(x, y, new Ground(t, i));
 
       } else {
-        this.setTile(x, y, new Wall(t));
+        this.setTile(x, y, new Wall(t, i));
       }
     }
   }
