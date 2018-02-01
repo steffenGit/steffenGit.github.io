@@ -170,9 +170,9 @@ export class SvgRenderer {
   }
 
   getDistance(x1, y1, x2, y2, dir, camDir) {
-    //return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+    let d2 = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
     let d = (x2-x1)*Math.cos(-camDir) - (y2-y1)*Math.sin(-camDir);
-    return Math.abs(d);
+    return Math.abs((d+d2)/2);
   }
 
 
