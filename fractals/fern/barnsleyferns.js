@@ -26,7 +26,6 @@ window.onload = function () {
   var imagedata = context.createImageData(imagew, imageh);
 
 
-  // The maximum number of iterations per pixel
 
   const f1 = {
     a:0.0,
@@ -132,42 +131,44 @@ window.onload = function () {
 
   }
 
-  function render(ob) {
-    console.time('all');
-    imagedata = context.createImageData(imagew, imageh)
-    context.stroke();
-    scale = ob.scale;
-    // Generate image
-    let interval = setInterval(() => {
-      generateImage(ob.iterationsPerInterval, [f1, f2, f4, f3]);
-    },0);
 
-    setTimeout(() => {
-      clearInterval(interval);
-      console.timeEnd('all');
-    },obj.animationLength);
-  }
-
-
-
-
-  let obj = {
+  let guiController = {
     render : function() {
-      render(obj);
+      render();
     },
     scale: 100,
     iterationsPerInterval : 2000,
     animationLength : 5000,
   };
 
+  function render() {
+    console.time('all');
+    imagedata = context.createImageData(imagew, imageh)
+    context.stroke();
+    scale = guiController.scale;
+    // Generate image
+    let interval = setInterval(() => {
+      generateImage(guiController.iterationsPerInterval, [f1, f2, f4, f3]);
+    },16);
+
+    setTimeout(() => {
+      clearInterval(interval);
+      console.timeEnd('all');
+    },guiController.animationLength);
+  }
+
+
+
+
+
 
   let gui = new dat.GUI({
     height : 5 * 32 - 1
   });
-  //gui.remember(obj);
-  gui.add(obj, 'render');
-  gui.add(obj, 'scale');
-  gui.add(obj, 'iterationsPerInterval');
-  gui.add(obj, 'animationLength');
-  render(obj);
+  gui.remember(guiController);
+  gui.add(guiController, 'render');
+  gui.add(guiController, 'scale');
+  gui.add(guiController, 'iterationsPerInterval');
+  gui.add(guiController, 'animationLength');
+  render(guiController);
 };
