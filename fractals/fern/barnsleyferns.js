@@ -10,6 +10,11 @@ window.onload = function () {
   var canvas = document.getElementById("viewport");
   var context = canvas.getContext("2d");
 
+  canvas.style.width = window.innerWidth + "px";
+  canvas.style.height = window.innerHeight + "px";
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
   // Width and height of the image
   var imagew = canvas.width;
   var imageh = canvas.height;
