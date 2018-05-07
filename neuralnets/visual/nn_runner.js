@@ -10,12 +10,14 @@ class NnRunner {
 
   }
 
-  run(iterations, reportingInterval) {
+  run(iterations, reportingInterval, reportingCallback) {
 
     for(let i = 0; i < iterations; i++) {
       let data = random(this.trainingdata);
       if(i % reportingInterval === 0) {
         console.log(i, this.nn.train(data.input, data.target), data);
+        if(reportingCallback)
+          reportingCallback();
       } else {
         this.nn.train(data.input, data.target)
       }

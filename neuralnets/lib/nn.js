@@ -12,6 +12,14 @@ function dsigmoid(y) {
   return y * (1 - y);
 }
 
+function relu(x) {
+  return x > 0? x: 0;
+}
+
+function dRelu(y) {
+  return y > 0? 1: 0;
+}
+
 function mean(matrix) {
   let array = matrix.toArray();
 
@@ -42,6 +50,7 @@ class Layer {
       return input_matrix;
     }
     let output = Matrix.multiply(this.weights, input_matrix);
+    // output.add(this.bias).map(relu);
     output.add(this.bias).map(sigmoid);
     return output;
   }
@@ -123,6 +132,7 @@ class NN {
       }
 
       // 2. calculate gradient
+      // let gradient = Matrix.map(outputs[i], dRelu);
       let gradient = Matrix.map(outputs[i], dsigmoid);
       gradient.multiply(error);
       gradient.multiply(this.lr);
