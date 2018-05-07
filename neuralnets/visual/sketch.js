@@ -1,5 +1,7 @@
 "use strict";
 let nn;
+let runner;
+
 function setup() {
   xor();
 }
@@ -14,20 +16,24 @@ function xor() {
       .addLayer(2, 'output');
   console.log(nn);
 
-  for(let i = 0; i < 20000; i++) {
-    let a = Math.floor(Math.random()  * 1.9);
-    let b = Math.floor(Math.random()  * 1.9);
+  runner = new NnRunner(nn);
+
+  let data = [];
+
+  for (let i = 0; i < 100; i++) {
+    let a = Math.floor(Math.random() * 2);
+    let b = Math.floor(Math.random() * 2);
     let c = [1, 0];
-    if((a || b) && !(a && b)) {
+    if ((a || b) && !(a && b)) {
       c = [0, 1];
     }
-    nn.train([a,b], c).toArray()[0];
-    if ( i % 100000 === 0) {
-      //nn.feedForward([a, b]);
-      //console.log(c);
-    }
+    data.push({input: [a, b], target: c});
+
   }
-  console.log('done');
+  console.log(data);
+  console.log('done loading');
+  runner.setTraningDataset(data);
+  runner.run(100000, 10000);
 
 }
 

@@ -1,12 +1,7 @@
-// NEXT TO DO
-// REDO gradient descent video about
-// delta weight formulas, connect to "mathematics of gradient" video
-// Implment gradient descent in library / with code
-// Talk about different activation function
-// XOR coding challenge
-// MNIST coding challenge
+"use strict";
 
-// Other techniques for learning
+
+//import * as Matrix from "./matrix";
 
 function sigmoid(x) {
   return 1 / (1 + Math.exp(-x));
@@ -17,103 +12,134 @@ function dsigmoid(y) {
   return y * (1 - y);
 }
 
+function mean(matrix) {
+  let array = matrix.toArray();
 
-class NeuralNetwork {
-  constructor(input_nodes, hidden_nodes, output_nodes) {
-    this.input_nodes = input_nodes;
-    this.hidden_nodes = hidden_nodes;
-    this.output_nodes = output_nodes;
+  let sum = array.reduce((a, c) => {
+    return a + c**2;
+  }, 0);
+  //console.log(sum);
+  return sum/array.length;
 
-    this.weights_ih = new Matrix(this.hidden_nodes, this.input_nodes);
-    this.weights_ho = new Matrix(this.output_nodes, this.hidden_nodes);
-    this.weights_ih.randomize();
-    this.weights_ho.randomize();
+}
 
-    this.bias_h = new Matrix(this.hidden_nodes, 1);
-    this.bias_o = new Matrix(this.output_nodes, 1);
-    this.bias_h.randomize();
-    this.bias_o.randomize();
-    this.learning_rate = 0.1;
+class Layer {
+  constructor(size, type, inputSize) {
+    this.size = size;
+    this.bias = new Matrix(size, 1).ones();
+    this.weights = null;
+    this.type = type;
+
+    if (inputSize) {
+      this.inputSize = inputSize;
+      this.weights = new Matrix(size, inputSize).randomize();
+      this.bias = new Matrix(size, 1).randomize();
+    }
   }
 
-  feedforward(input_array) {
+  feedForward(input_matrix) {
+    if (this.type === 'input') {
+      return input_matrix;
+    }
+    let output = Matrix.multiply(this.weights, input_matrix);
+    output.add(this.bias).map(sigmoid);
+    return output;
+  }
+}
 
-    // Generating the Hidden Outputs
-    let inputs = Matrix.fromArray(input_array);
-    let hidden = Matrix.multiply(this.weights_ih, inputs);
-    hidden.add(this.bias_h);
-    // activation function!
-    hidden.map(sigmoid);
+class NN {
+  constructor(learningRate) {
+    this.layers = [];
+    this.lr = learningRate;
+  }
 
-    // Generating the output's output!
-    let output = Matrix.multiply(this.weights_ho, hidden);
-    output.add(this.bias_o);
-    output.map(sigmoid);
+  addLayer(size, type) {
+    let layer;
+    if (this.layers.length < 1) {
+      layer = new Layer(size, type);
+    } else {
+      layer = new Layer(size, type, this.layers[this.layers.length - 1].size);
+    }
+    this.layers.push(layer);
+    return this;
+  }
 
-    // Sending back to the caller!
-    return output.toArray();
+  predict(input_array) {
+    let input = Matrix.fromArray(input_array);
+    let output = this.feedForward(input);
+    console.log('--------------------------------');
+    input.print();
+    output[output.length-1].print();
+
   }
 
   train(input_array, target_array) {
-    // Generating the Hidden Outputs
-    let inputs = Matrix.fromArray(input_array);
-    let hidden = Matrix.multiply(this.weights_ih, inputs);
-    hidden.add(this.bias_h);
-    // activation function!
-    hidden.map(sigmoid);
-
-    // Generating the output's output!
-    let outputs = Matrix.multiply(this.weights_ho, hidden);
-    outputs.add(this.bias_o);
-    outputs.map(sigmoid);
-
-    // Convert array to matrix object
-    let targets = Matrix.fromArray(target_array);
-
-    //-------------------------------------------------------------------------
-
-    // Calculate the error
-    // ERROR = TARGETS - OUTPUTS
-    let output_errors = Matrix.subtract(targets, outputs);
-
-    // let gradient = outputs * (1 - outputs);
-    // Calculate gradient
-    let gradients = Matrix.map(outputs, dsigmoid);
-    gradients.multiply(output_errors);
-    gradients.multiply(this.learning_rate);
-
-    // Calculate deltas
-    let hidden_T = Matrix.transpose(hidden);
-    let weight_ho_deltas = Matrix.multiply(gradients, hidden_T);
-
-    // Adjust the weights by deltas
-    this.weights_ho.add(weight_ho_deltas);
-    // Adjust the bias by its deltas (which is just the gradients)
-    this.bias_o.add(gradients);
-
-
-    //--------------------------------------------------------------------
-
-    // Calculate the hidden layer errors
-    let who_t = Matrix.transpose(this.weights_ho);
-    let hidden_errors = Matrix.multiply(who_t, output_errors);
-
-    // Calculate hidden gradient
-    let hidden_gradient = Matrix.map(hidden, dsigmoid);
-    hidden_gradient.multiply(hidden_errors);
-    hidden_gradient.multiply(this.learning_rate);
-
-    // Calcuate input->hidden deltas
-    let inputs_T = Matrix.transpose(inputs);
-    let weight_ih_deltas = Matrix.multiply(hidden_gradient, inputs_T);
-
-    this.weights_ih.add(weight_ih_deltas);
-    // Adjust the bias by its deltas (which is just the gradients)
-    this.bias_h.add(hidden_gradient);
-
-    // outputs.print();
-    // targets.print();
-    // error.print();
+    // feed forward
+    let input = Matrix.fromArray(input_array);
+    let target = Matrix.fromArray(target_array);
+    let outputs = this.feedForward(input);
+    //backpropagate
+    return this.backPropagate(outputs, target)
   }
 
+  /**
+   * feeds the inputdata into the network. returns an array
+   * of one outputmatrix per layer.
+   * @param input_array
+   * @returns {*|*[]}
+   */
+  feedForward(input) {
+
+    // reduce the layer to an array of error matrices, feeding the input data
+    // into layer 0 = 'input'-layer as seed for the reduce function
+    let output = this.layers.reduce((a, c, i) => {
+      // to avoid duplication with the seed data
+      if (i > 0) {
+        // add the output of the current layer to the aggregation array
+        // the input to the prediction is the output of the layer before
+        a.push(c.feedForward(a[a.length - 1]));
+      }
+      return a;
+    }, [input]);
+    return output;
+  }
+
+  backPropagate(outputs, target) {
+    // TODO: Needs massive rework
+    let iInput = 0;
+    let iOutput = this.layers.length-1;
+
+    let error;
+    let retval;
+    for(let i = iOutput; i > iInput; i--) {
+
+      // 1. calculate error
+      if(i === iOutput) {
+        error = Matrix.subtract(target, outputs[i]);
+        retval = Matrix.subtract(target, outputs[i]);
+      } else {
+        let weightsTransposed = Matrix.transpose(this.layers[i+1].weights);
+        error = Matrix.multiply(weightsTransposed, error);
+      }
+
+      // 2. calculate gradient
+      let gradient = Matrix.map(outputs[i], dsigmoid);
+      gradient.multiply(error);
+      gradient.multiply(this.lr);
+
+      // 3. calculate deltas
+      let inputsTransposed = Matrix.transpose(outputs[i-1]);
+      let dWeight = Matrix.multiply(gradient, inputsTransposed);
+
+      //4. adjust weights
+      this.layers[i].weights.add(dWeight);
+      this.layers[i].bias.add(gradient);
+    }
+
+    return mean(retval);
+  }
+}
+
+if (typeof module !== 'undefined') {
+  module.exports = NN;
 }
