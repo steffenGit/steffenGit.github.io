@@ -70,6 +70,8 @@ class NeuralNetwork {
     // Convert array to matrix object
     let targets = Matrix.fromArray(target_array);
 
+    //-------------------------------------------------------------------------
+
     // Calculate the error
     // ERROR = TARGETS - OUTPUTS
     let output_errors = Matrix.subtract(targets, outputs);
@@ -80,7 +82,6 @@ class NeuralNetwork {
     gradients.multiply(output_errors);
     gradients.multiply(this.learning_rate);
 
-
     // Calculate deltas
     let hidden_T = Matrix.transpose(hidden);
     let weight_ho_deltas = Matrix.multiply(gradients, hidden_T);
@@ -89,6 +90,9 @@ class NeuralNetwork {
     this.weights_ho.add(weight_ho_deltas);
     // Adjust the bias by its deltas (which is just the gradients)
     this.bias_o.add(gradients);
+
+
+    //--------------------------------------------------------------------
 
     // Calculate the hidden layer errors
     let who_t = Matrix.transpose(this.weights_ho);

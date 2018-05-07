@@ -1,15 +1,34 @@
 "use strict";
-
+let nn;
 function setup() {
+  xor();
+}
+
+function xor() {
 
   console.log("setting up");
-  let nn = new NN();
-  nn.addLayer(3, 'input')
-      .addLayer(4, 'hidden')
+  nn = new NN(.1);
+  nn.addLayer(2, 'input')
       .addLayer(3, 'hidden')
+      .addLayer(4, 'hidden')
       .addLayer(2, 'output');
   console.log(nn);
-  console.log(nn.reducePredict([3,1,2]));
+
+  for(let i = 0; i < 20000; i++) {
+    let a = Math.floor(Math.random()  * 1.9);
+    let b = Math.floor(Math.random()  * 1.9);
+    let c = [1, 0];
+    if((a || b) && !(a && b)) {
+      c = [0, 1];
+    }
+    nn.train([a,b], c).toArray()[0];
+    if ( i % 100000 === 0) {
+      //nn.feedForward([a, b]);
+      //console.log(c);
+    }
+  }
+  console.log('done');
+
 }
 
 

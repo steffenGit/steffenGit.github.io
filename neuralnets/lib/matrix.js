@@ -1,5 +1,9 @@
 // let m = new Matrix(3,2);
-
+/**
+ * TODO:
+ * * return this for chaining DONE
+ * * refactor for array methods and more functional approach?
+ */
 
 class Matrix {
   constructor(rows, cols) {
@@ -83,7 +87,7 @@ class Matrix {
   static multiply(a, b) {
     // Matrix product
     if (a.cols !== b.rows) {
-      console.log('Columns of A must match rows of B.')
+      console.log('Columns of A must match rows of B. got: ', a.cols, b.rows)
       return undefined;
     }
     let result = new Matrix(a.rows, b.cols);
