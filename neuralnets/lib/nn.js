@@ -2,7 +2,7 @@
 
 
 //import * as Matrix from "./matrix";
-
+// Activation function and their derivatives
 function sigmoid(x) {
   return 1 / (1 + Math.exp(-x));
 }
@@ -24,24 +24,29 @@ function mean(matrix) {
   let array = matrix.toArray();
 
   let sum = array.reduce((a, c) => {
-    return a + c**2;
+    return a + Math.abs(c);
   }, 0);
   //console.log(sum);
   return sum/array.length;
 
 }
 
+
+/**
+ * describes a single layer of the NN.
+ *
+ */
 class Layer {
   constructor(size, type, inputSize) {
     this.size = size;
-    this.bias = new Matrix(size, 1).ones();
+    this.biases = new Matrix(size, 1).ones();
     this.weights = null;
     this.type = type;
 
     if (inputSize) {
       this.inputSize = inputSize;
       this.weights = new Matrix(size, inputSize).randomize();
-      this.bias = new Matrix(size, 1).randomize();
+      this.biases = new Matrix(size, 1).randomize();
     }
   }
 
@@ -50,8 +55,8 @@ class Layer {
       return input_matrix;
     }
     let output = Matrix.multiply(this.weights, input_matrix);
-    // output.add(this.bias).map(relu);
-    output.add(this.bias).map(sigmoid);
+    // output.add(this.biases).map(relu);
+    output.add(this.biases).map(sigmoid);
     return output;
   }
 }
@@ -143,7 +148,7 @@ class NN {
 
       //4. adjust weights
       this.layers[i].weights.add(dWeight);
-      this.layers[i].bias.add(gradient);
+      this.layers[i].biases.add(gradient);
     }
 
     return mean(retval);

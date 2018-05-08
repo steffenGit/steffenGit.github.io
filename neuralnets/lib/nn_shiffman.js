@@ -88,7 +88,7 @@ class NeuralNetwork {
 
     // Adjust the weights by deltas
     this.weights_ho.add(weight_ho_deltas);
-    // Adjust the bias by its deltas (which is just the gradients)
+    // Adjust the biases by its deltas (which is just the gradients)
     this.bias_o.add(gradients);
 
 
@@ -108,7 +108,7 @@ class NeuralNetwork {
     let weight_ih_deltas = Matrix.multiply(hidden_gradient, inputs_T);
 
     this.weights_ih.add(weight_ih_deltas);
-    // Adjust the bias by its deltas (which is just the gradients)
+    // Adjust the biases by its deltas (which is just the gradients)
     this.bias_h.add(hidden_gradient);
 
     // outputs.print();
