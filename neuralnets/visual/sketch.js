@@ -38,7 +38,7 @@ let sketchError = function(sketch) {
     plot.setDim(WIDTH-100, HEIGHT-100);
     plot.getXAxis().setAxisLabelText("iterations x 100");
     plot.getYAxis().setAxisLabelText("error rate");
-    plot.setTitleText("XOR");
+    plot.setTitleText("2 XOR and one dead input");
     plot.defaultDraw();
     //sketch.noLoop();
     runner = new NnRunner(nn);
@@ -67,7 +67,7 @@ function xor(iterations) {
     if ((a || b) && !(a && b)) {
       c = [0, 1];
     }
-    data.push({input: [a, b], target: c});
+    data.push({input: [a, b, 0], target: c});
 
   }
   //console.log(data);
@@ -78,7 +78,7 @@ function xor(iterations) {
 }
 
 
-nn.addLayer(2, 'input')
+nn.addLayer(3, 'input')
     .addLayer(5, 'hidden')
     .addLayer(6, 'hidden')
     .addLayer(3, 'hidden')
