@@ -46,7 +46,7 @@ let sketchError = function(sketch) {
 
   sketch.draw = function () {
     //sketch.background(122);
-    let res = xor(100);
+    let res = xor(50);
     //console.log(res);
     res.forEach((c, i) => {
       // if(c < 2)
