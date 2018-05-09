@@ -46,7 +46,7 @@ class Layer {
     if (inputSize) {
       this.inputSize = inputSize;
       this.weights = new Matrix(size, inputSize).randomize();
-      this.biases = new Matrix(size, 1).randomize();
+      this.biases = new Matrix(size, 1).ones();
     }
   }
 

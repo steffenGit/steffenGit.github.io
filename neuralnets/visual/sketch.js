@@ -1,7 +1,7 @@
 "use strict";
 let painter;
 let runner;
-let nn = new NN(0.1);
+let nn = new NN(0.15);
 
 
 let sketchNn = function (sketch) {
@@ -67,21 +67,21 @@ function xor(iterations) {
     if ((a || b) && !(a && b)) {
       c = [0, 1];
     }
-    data.push({input: [a, b, 0], target: c});
+    data.push({input: [a, b], target: c});
 
   }
   //console.log(data);
   //console.log('done loading');
   runner.setTraningDataset(data);
-  return runner.run(iterations, 90);
+  return runner.run(iterations, 10);
 
 }
 
 
-nn.addLayer(3, 'input')
-    .addLayer(5, 'hidden')
+nn.addLayer(2, 'input')
     .addLayer(6, 'hidden')
-    .addLayer(3, 'hidden')
+    //.addLayer(5, 'hidden')
+    //.addLayer(3, 'hidden')
     .addLayer(2, 'output');
 console.log(nn);
 
