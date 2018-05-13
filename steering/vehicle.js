@@ -1,13 +1,15 @@
 "use strict";
 
 class Vehicle extends Entity{
-  constructor(x, y) {
-    super(x,y);
+  constructor(pos) {
+    super(pos);
     this.velocity = createVector(0,0);
     this.acceleration = createVector(0,0);
     this.r = 7;
     this.maxForce = 0;
     this.maxSpeed = 0;
+    this.breakingDistance = 50;
+    this.arrivalDistance = 10;
   }
 
   update() {
@@ -41,14 +43,14 @@ class Vehicle extends Entity{
    * steers towards target at full speed, breaks when in breakingDistance
    * @param vTarget
    */
-  arrive(vTarget, breakingDistance, arrivalDistance) {
+  arrive(vTarget) {
     let desired = p5.Vector.sub(vTarget, this.position);
     let d = desired.mag();
-    if(d < arrivalDistance) {
+    if(d < this.arrivalDistance) {
       this.onArrival();
     }
-    if(d < breakingDistance) {
-      let m = map(d, 0, breakingDistance, 0, this.maxSpeed);
+    if(d < this.breakingDistance) {
+      let m = map(d, 0,this. breakingDistance, 0, this.maxSpeed);
       desired.setMag(m);
     } else {
       desired.setMag(this.maxSpeed);

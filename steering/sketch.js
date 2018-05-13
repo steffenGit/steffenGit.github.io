@@ -1,37 +1,23 @@
 "use strict";
-let vehicles = [];
 
-
+let world;
 function setup() {
+  createCanvas(1200, 700);
 
-  createCanvas(600, 600);
-  for (let i = 0; i < 1; i++) {
-    let v = new Vehicle(random(width), random(height));
-    v.maxSpeed = 2;
-    v.maxForce = 0.1;
-    v.onArrival = function () {
-      console.log('done:', v.position);
-    };
-    vehicles.push(v);
+  world = new World();
+  let hive = new Hive(createVector(600, 300),world);
+  world.setHive(hive);
+  for(let i = 0; i < 20; i++) {
+    world.addAnt(new Ant(hive.position.copy(), world));
   }
-  background(200);
 }
 
 function draw() {
   background(200);
-  let mouse = createVector(mouseX, mouseY);
+  world.update();
+  world.draw();
+}
 
-  // Draw an ellipse at the mouse position
-  fill(200);
-  stroke(0);
-  strokeWeight(2);
-  ellipse(mouse.x, mouse.y, 48, 48);
-
-  // Call the appropriate steering behaviors for our agents
-  vehicles.forEach(v => {
-    v.flee(mouse, 100, 150);
-    v.update();
-    v.draw();
-  });
-
+function mouseClicked() {
+  world.addFood(new Food(createVector(mouseX, mouseY), 200));
 }

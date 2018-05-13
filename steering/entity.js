@@ -1,8 +1,8 @@
 "use strict";
 
 class Entity {
-  constructor(x, y) {
-    this.position = createVector(x, y);
+  constructor(pos) {
+    this.position = pos;
   }
 
   update() {
