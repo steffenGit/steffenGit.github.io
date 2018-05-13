@@ -20,19 +20,20 @@ class Ant extends Vehicle {
 
 
   update() {
+    super.update();
+    this.decideOnPheromoneDrop();
     let perceived = this.world.perceive(this.position, this.perceptionDistance);
     switch (this.state) {
       case 'food':
         this.findFood(perceived);
-        break;
+        return;
       case 'home':
         this.findHome(perceived);
-        break;
+        return;
       default:
         throw Error('unknown state');
     }
-    this.decideOnPheromoneDrop();
-    super.update();
+
   }
 
 
@@ -53,7 +54,6 @@ class Ant extends Vehicle {
   }
 
   findHome(perceived) {
-    this.targetEntity = null;
     if (perceived.hive) {
       // we can see our home
       this.wanderTarget = null;
@@ -61,6 +61,7 @@ class Ant extends Vehicle {
       this.targetEntity = perceived.hive;
       //console.log('setting target to hive');
     } else {
+      this.targetEntity = null;
       let closestToHome = null;
       let closestDistance = Number.MAX_SAFE_INTEGER;
       perceived.pheromones.forEach(p => {
@@ -72,7 +73,7 @@ class Ant extends Vehicle {
       if (closestToHome) {
         // there is a pheromone pointing home
         this.wanderTarget = null;
-        this.seek(p5.Vector.add(closestToHome.position, closestToHome.dir));
+        this.arrive(p5.Vector.add(closestToHome.position, closestToHome.dir));
       } else {
         // we need to search
         this.wander();
@@ -81,7 +82,6 @@ class Ant extends Vehicle {
   }
 
   findFood(perceived) {
-    this.targetEntity = null;
     if (perceived.foods.length > 0) {
       this.wanderTarget = null;
       // we can see our home
@@ -90,6 +90,7 @@ class Ant extends Vehicle {
       this.targetEntity = f;
       //console.log('setting targetentity to food');
     } else {
+      this.targetEntity = null;
       let closestToFood = null;
       let closestDistance = Number.MAX_SAFE_INTEGER;
       perceived.pheromones.forEach(p => {
@@ -101,16 +102,20 @@ class Ant extends Vehicle {
       if (closestToFood) {
         this.wanderTarget = null;
         // there is a pheromone pointing to food
-        this.seek(p5.Vector.add(closestToFood.position, closestToFood.dir));
+        this.arrive(p5.Vector.add(closestToFood.position, closestToFood.dir));
       } else {
         // we need to search
-        this.wander();
+        if(this.distanceTravelled > 5000) {
+          this.state = 'home';
+        }
+        else this.wander();
       }
     }
   }
 
   onArrival() {
-
+    this.distanceTravelled = 0;
+    this.stop();
     if (this.wanderTarget) {
       this.pickWanderTarget();
       this.targetEntity = null;
@@ -121,7 +126,6 @@ class Ant extends Vehicle {
       this.state = 'food';
       if (this.targetEntity)
         this.targetEntity.dropFood(this.food);
-      this.targetEntity = null;
 
       this.food = 0;
       //console.log('reached hive');
@@ -130,12 +134,11 @@ class Ant extends Vehicle {
       this.state = 'home';
       if (this.targetEntity)
         this.food = this.targetEntity.bite(this.maxFood);
-      this.targetEntity = null;
 
       //console.log('reached food');
-    } else {
-      this.targetEntity = null;
     }
+    this.targetEntity = null;
+
   }
 
   wander() {
