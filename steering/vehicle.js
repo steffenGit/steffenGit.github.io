@@ -48,6 +48,7 @@ class Vehicle extends Entity{
     let d = desired.mag();
     if(d < this.arrivalDistance) {
       this.onArrival();
+      this.stop();
     }
     if(d < this.breakingDistance) {
       let m = map(d, 0,this. breakingDistance, 0, this.maxSpeed);

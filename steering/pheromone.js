@@ -20,16 +20,16 @@ class Pheromone extends Entity {
 
     if(this.type === 'food') {
       fill(120, 200, 120, map(this.age, 0, this.ttl, 255, 0));
-      stroke(120, 200, 120, 255);
+      stroke(120, 200, 120, map(this.age, 0, this.ttl, 255, 0));
 
     } else if (this.type === 'home') {
       fill(200, 120, 200, map(this.age, 0, this.ttl, 255, 0));
-      stroke(200, 120, 200, 255);
+      stroke(200, 120, 200, map(this.age, 0, this.ttl, 255, 0));
 
     }
 
     strokeWeight(1);
-    ellipse(this.position.x, this.position.y, 10);
+    ellipse(this.position.x, this.position.y, 5);
     let t = p5.Vector.add(this.position, this.dir);
     line(this.position.x, this.position.y, t.x, t.y);
   }
