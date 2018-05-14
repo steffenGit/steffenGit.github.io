@@ -10,16 +10,20 @@ const MAX_WIDTH = 130;
 const MIN_HEIGHT = 20;
 const MAX_HEIGHT = 350;
 
+const INTERVAL = 0.01;
 
+let bgData;
+let bgImg;
 function setup() {
   createCanvas(1200, 800);
   g = createVector(0, .2);
   initSkyline(25);
+  initBackground();
 }
 
 
 function draw() {
-  background(2, 2, 35);
+  drawBackground();
   if (fireworks.length < 10 && random() > 0.03) fireworks.push(new Firework());
 
   fireworks.forEach((f, i) => {
@@ -74,5 +78,21 @@ function drawSkyline() {
   })
 }
 
+function initBackground() {
+  bgImg = createImage(width, height);
+  bgData = createImage(width, height);
+  bgData.loadPixels();
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      bgData.set(x, y, color(noise(x*INTERVAL, y*INTERVAL)*255));
+      bgImg.set(x, y, color(2, 2, 35));
+    }
+  }
+  bgData.updatePixels();
 
+}
+
+function drawBackground() {
+  image(bgData, 0, 0);
+}
 
