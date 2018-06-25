@@ -7,7 +7,7 @@ function setup() {
   world = new World();
   let hive = new Hive(createVector(600, 300),world);
   world.setHive(hive);
-  for(let i = 0; i < 20; i++) {
+  for(let i = 0; i < 50; i++) {
     world.addAnt(new Ant(hive.position.copy(), world));
   }
 }
@@ -19,5 +19,5 @@ function draw() {
 }
 
 function mouseClicked() {
-  world.addFood(new Food(createVector(mouseX, mouseY), 200));
+  world.addFood(new Food(createVector(mouseX, mouseY), 400));
 }
