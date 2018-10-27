@@ -45,9 +45,25 @@ class Layer {
 
     if (inputSize) {
       this.inputSize = inputSize;
-      this.weights = new Matrix(size, inputSize).randomize();
-      this.biases = new Matrix(size, 1).ones();
+      this.weights = new Matrix(size, inputSize).randomizepositive();
+      this.biases = new Matrix(size, 1).randomizeFullInt();
+
+      // this.weights = new Matrix(size, inputSize).ones();
+      // this.biases = new Matrix(size, 1).minusOnes();
     }
+  }
+
+  getCopy() {
+    let l = new Layer(this.size, this.type, this.inputSize);
+    if(this.inputSize) {
+      l.weights = this.weights.getCopy();
+    }
+    l.biases = this.biases.getCopy();
+    return l;
+  }
+
+  mutate(mutationRate) {
+
   }
 
   feedForward(input_matrix) {
@@ -67,6 +83,18 @@ class NN {
     this.lr = learningRate;
   }
 
+  getCopy() {
+    let nn = new NN(this.lr);
+    this.layers.forEach(l => {
+      nn.layers.push(l.getCopy());
+    });
+    return nn;
+  }
+
+  mutate(mutationRate) {
+    this.layers.forEach(l => l.mutate(mutationRate));
+  }
+
   addLayer(size, type) {
     let layer;
     if (this.layers.length < 1) {
@@ -82,9 +110,9 @@ class NN {
     let input = Matrix.fromArray(input_array);
     let output = this.feedForward(input);
     console.log('--------------------------------');
-    input.print();
-    output[output.length-1].print();
-
+    //input.print();
+    // output[output.length-1].print();
+    return output[output.length-1];
   }
 
   train(input_array, target_array) {
@@ -125,6 +153,8 @@ class NN {
 
     let error;
     let retval;
+
+    if(outputs[iOutput] > 1 ) console.log('output ' + outputs[iOutput]);
     for(let i = iOutput; i > iInput; i--) {
 
       // 1. calculate error

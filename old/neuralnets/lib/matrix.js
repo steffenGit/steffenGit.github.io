@@ -19,6 +19,16 @@ class Matrix {
     }
   }
 
+  getCopy() {
+    let m = new Matrix(this.rows, this.cols);
+    for (let i = 0; i < this.rows; i++) {
+      for (let j = 0; j < this.cols; j++) {
+        m.data[i][j] = this.data[i][j];
+      }
+    }
+    return m;
+  }
+
   static fromArray(arr) {
     let m = new Matrix(arr.length, 1);
     for (let i = 0; i < arr.length; i++) {
@@ -48,14 +58,6 @@ class Matrix {
     return arr;
   }
 
-  randomize() {
-    for (let i = 0; i < this.rows; i++) {
-      for (let j = 0; j < this.cols; j++) {
-        this.data[i][j] = Math.random()*2-1;
-      }
-    }
-    return this;
-  }
 
   add(n) {
     if (n instanceof Matrix) {
@@ -151,10 +153,56 @@ class Matrix {
     return this;
   }
 
+
+  randomize() {
+    for (let i = 0; i < this.rows; i++) {
+      for (let j = 0; j < this.cols; j++) {
+        this.data[i][j] = Math.random() * 2 - 1;
+      }
+    }
+    return this;
+  }
+
+  randomizeFullInt() {
+    for (let i = 0; i < this.rows; i++) {
+      for (let j = 0; j < this.cols; j++) {
+        this.data[i][j] = Math.random() * 2 - 1 > 0 ? 1 : -1;
+      }
+    }
+    return this;
+  }
+
+  randomizepositive() {
+    for (let i = 0; i < this.rows; i++) {
+      for (let j = 0; j < this.cols; j++) {
+        this.data[i][j] = Math.random();
+      }
+    }
+    return this;
+  }
+
   ones() {
     for (let i = 0; i < this.rows; i++) {
       for (let j = 0; j < this.cols; j++) {
         this.data[i][j] = 1.0;
+      }
+    }
+    return this;
+  }
+
+  minusOnes() {
+    for (let i = 0; i < this.rows; i++) {
+      for (let j = 0; j < this.cols; j++) {
+        this.data[i][j] = -1.0;
+      }
+    }
+    return this;
+  }
+
+  zeroes() {
+    for (let i = 0; i < this.rows; i++) {
+      for (let j = 0; j < this.cols; j++) {
+        this.data[i][j] = 0.0;
       }
     }
     return this;

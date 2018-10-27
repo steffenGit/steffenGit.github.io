@@ -49,10 +49,11 @@ class NnPainter {
       for (let j = 0; j < this.nodes[i].length; j++) {
         for (let k = 0; k < this.nodes[i - 1].length; k++) {
           let val = this.nodes[i][j].weights[k] * 255;
+          // if(val>255 || val < -255) console.log('whooot ' + val);
           if (Math.sign(val) > 0) {
-            this.s.stroke(40, Math.abs(val), 40, Math.abs(val));
+            this.s.stroke(80, Math.abs(val), 80, Math.abs(val));
           } else {
-            this.s.stroke(Math.abs(val), 40, 40, Math.abs(val));
+            this.s.stroke(Math.abs(val), 80, 80, Math.abs(val));
           }
           this.s.strokeWeight(2);
           this.s.line(this.nodes[i][j].x, this.nodes[i][j].y, this.nodes[i - 1][k].x, this.nodes[i - 1][k].y);
