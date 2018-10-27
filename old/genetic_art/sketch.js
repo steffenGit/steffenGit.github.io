@@ -12,6 +12,8 @@ let constrain;
 //   return val;
 // }
 
+const history = [];
+
 let fastFitness = function (sourceImg, targetImg) {
   let target = targetImg.pixels;
   sourceImg.loadPixels();
@@ -21,8 +23,8 @@ let fastFitness = function (sourceImg, targetImg) {
   for (let i = 0; i < src.length; i++) {
     if ((i + 1) % 4 === 0) continue;
     // TODO: check correct error
-    score += Math.floor(Math.abs(target[i] - src[i])) ** 2;
-    // score += Math.floor(Math.abs(target[i] - src[i]));
+    // score += Math.floor(Math.abs(target[i] - src[i])) ** 2;
+    score += Math.floor(Math.abs(target[i] - src[i]));
   }
   return score;
 };
@@ -235,6 +237,7 @@ let sketchMain = function (sketch) {
     img = sketch.loadImage('big.jpg');
     current = new Drawing();
     fittest = current.copy();
+    history.push(fittest);
   };
 
 
@@ -269,7 +272,8 @@ let sketchMain = function (sketch) {
       mr = highscore / (200 * 200 * 3 * 1000);
 
       fittest = current.copy();
-      console.log('better: ', ctBest, ctAll, highscore, mr);
+      history.push(fittest);
+      console.log('better: ', ctBest, history.length, ctAll, highscore, mr);
       // console.log('better: ', ctBest, ctAll, highscore, Math.sqrt(highscore)/(200*200*3));
       dirty = true;
     }
@@ -278,17 +282,35 @@ let sketchMain = function (sketch) {
   };
 };
 
+
+let curFrame = history.length-1;
+let playing = false;
+
 let sketchCur = function (sketch) {
   sketch.setup = function () {
-    sketch.createCanvas(WIDTH, HEIGHT);
-
+    let cnv = sketch.createCanvas(WIDTH, HEIGHT);
+    cnv.mousePressed(() => {
+      curFrame = 0;
+      playing = true;
+    });
+    this.curFrame = history.length-1;
   };
 
   sketch.draw = function () {
-    if (dirty) {
+    if (dirty && !playing) {
+      curFrame = history.length-1;
       sketch.background(255);
-      fittest.draw(sketch);
+      history[curFrame].draw(sketch);
       dirty = false;
+    }
+    if (playing) {
+      sketch.background(255);
+      history[curFrame].draw(sketch);
+      if(curFrame === history.length-1)
+        playing = false;
+      else
+        curFrame++;
+
     }
   };
 };
